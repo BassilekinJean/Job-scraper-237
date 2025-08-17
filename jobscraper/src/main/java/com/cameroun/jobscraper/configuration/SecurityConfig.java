@@ -42,12 +42,7 @@ public class SecurityConfig {
                     .anyRequest().authenticated()
                 )
                 .oauth2Login(Customizer.withDefaults())
-                .formLogin(form -> form
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/dashboard", true)
-                    .failureUrl("/error?statusCode=%d&errorMessage=%s")
-                    .permitAll()
-                )
+                .formLogin(Customizer.withDefaults())
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())) // Pour H2 console
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

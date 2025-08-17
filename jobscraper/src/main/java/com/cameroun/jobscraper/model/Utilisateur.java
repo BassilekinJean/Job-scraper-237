@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import com.cameroun.jobscraper.enums.AuthProvider;
 import com.cameroun.jobscraper.enums.Role;
 
@@ -28,12 +30,12 @@ public class Utilisateur {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @NotBlank(message = "L'email ne peut pas etre vide")
+    @NotBlank(message = "L'email ne peut pas être vide")
     @Email(message = "Format d'email invalide")
     private String userEmail;
 
     @Column(nullable = false)
-    @NotBlank(message = "Le mot de passe ne peut pas etre vide")
+    @NotBlank(message = "Le mot de passe ne peut pas être vide")
     @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
     private String userPassword;
 
@@ -53,5 +55,7 @@ public class Utilisateur {
 
     private boolean accountLocked = false;
 
+    @Size(min = 1, max = 3, message = "Vous devez sélectionner entre 1 et 3 domaines")
+    @UniqueElements
     private List<String> domaineJob = new ArrayList<>();
 }

@@ -55,7 +55,7 @@ public class Utilisateur {
 
     private boolean accountLocked = false;
 
-    @Size(min = 1, max = 3, message = "Vous devez sélectionner entre 1 et 3 domaines")
+    //@Size(min = 1, max = 3, message = "Vous devez sélectionner entre 1 et 3 domaines")
     @UniqueElements
     private List<String> domaineJob = new ArrayList<>();
 }

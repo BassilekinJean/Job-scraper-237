@@ -1,6 +1,5 @@
 package com.cameroun.jobscraper.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,10 +13,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class JobOffer {
 
     @Id
@@ -30,6 +33,7 @@ public class JobOffer {
 
     private String location;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -38,7 +42,7 @@ public class JobOffer {
     @Column(columnDefinition = "TEXT", unique = true)
     private String originalUrl;
 
-    private LocalDate applicationDeadline;
+    private LocalDateTime applicationDeadline;
 
     @Column(updatable = false)
     private LocalDateTime postedAt;

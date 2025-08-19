@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "otp.expiration.time",
+    "type": "java.lang.String",
+    "description": "A description for 'otp.expiration.time'"
+  },
+  {
+    "name": "jwt.secret-key",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.secret-key'"
+  },
+  {
+    "name": "jwt.refresh-token-expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.refresh-token-expiration'"
+  },
+  {
+    "name": "jwt.access-token-expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.access-token-expiration'"
+  }
+]}

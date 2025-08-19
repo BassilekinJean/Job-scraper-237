@@ -39,6 +39,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/auth/**", "/h2-console/**", "/actuator/health").permitAll()
                     .anyRequest().authenticated()
                 )
                 .oauth2Login(Customizer.withDefaults())

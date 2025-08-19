@@ -23,6 +23,7 @@ import com.cameroun.jobscraper.scrapper.JobInfoConcoursScraperService;
 import com.cameroun.jobscraper.service.JobOfferService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,7 @@ public class JobController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(path = "/create", consumes = "application/json")
     @Operation(summary = "Création d'une nouvelle offre d'emploi", description = "Permet de créer une nouvelle offre d'emploi")
+    @Schema(example = "{\"title\": \"Software Engineer\", \"description\": \"Job description here\", \"location\": \"Remote, Yaounde...\", \"company\": \"Company Name\", \"originalUrl\": \"https://example.com/job/123\", \"applicationDeadline\": \"12:11:2025 12:00\"}")
     public ResponseEntity<?> createJob(@Valid @RequestBody JobDto jobDto) {
         jobOfferService.createJob(jobDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();

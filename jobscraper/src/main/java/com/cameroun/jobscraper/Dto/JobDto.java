@@ -21,8 +21,6 @@ public record JobDto(
     @NotBlank(message = "L'url ne peut pas être vide")
     String originalUrl,
 
-    LocalDateTime postedAt,
-
     LocalDateTime applicationDeadline
 
 ) {

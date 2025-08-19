@@ -1,5 +1,6 @@
 package com.cameroun.jobscraper.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -32,7 +33,7 @@ public class JobOfferService {
         jobOffer.setDescription(jobOfferDto.description());
         jobOffer.setLocation(jobOfferDto.location());
         jobOffer.setOriginalUrl(jobOfferDto.originalUrl());
-        jobOffer.setPostedAt(jobOfferDto.postedAt());
+        jobOffer.setPostedAt(LocalDateTime.now());
         jobOffer.setApplicationDeadline(jobOfferDto.applicationDeadline());
 
         jobRepository.save(jobOffer);

@@ -1,6 +1,11 @@
 package com.cameroun.jobscraper.controller;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cameroun.jobscraper.Dto.PagedResponse;
 import com.cameroun.jobscraper.model.JobOffer;
 import com.cameroun.jobscraper.scrapper.JobInfoConcoursScraperService;
 import com.cameroun.jobscraper.service.JobOfferService;
@@ -26,14 +32,15 @@ public class JobController {
 
     // GET /jobs?page=0&size=10&location=...
     @GetMapping
-    public Page<JobOffer> listJobs(
+    public PagedResponse<JobOffer> listJobs(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) String location,
         @RequestParam(required = false) String keyword,
         @RequestParam(required = false) String company
     ) {
-        return jobOfferService.searchJobs(location, keyword, company, page, size);
+        Page<JobOffer> jobPage = jobOfferService.searchJobs(location, keyword, company, page, size);
+        return PagedResponse.of(jobPage);
     }
 
     // GET /jobs/:id
@@ -53,7 +60,24 @@ public class JobController {
 
     // POST /jobs/scrape (pour admin)
     @PostMapping("/scrape")
-    public void scrapeJobs() {
-        jobInfoConcoursScraperService.scrapeJobs();
+    public ResponseEntity<?> scrapeJobs() {
+        try {
+            jobInfoConcoursScraperService.scrapeJobs();
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Scraping terminé avec succès");
+            response.put("timestamp", LocalDateTime.now().toString());
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Erreur lors du scraping");
+            errorResponse.put("details", e.getMessage());
+            errorResponse.put("timestamp", LocalDateTime.now().toString());
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(errorResponse);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.cameroun.jobscraper.Dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -24,7 +23,7 @@ public record JobDto(
 
     LocalDateTime postedAt,
 
-    LocalDate applicationDeadline
+    LocalDateTime applicationDeadline
 
 ) {
 

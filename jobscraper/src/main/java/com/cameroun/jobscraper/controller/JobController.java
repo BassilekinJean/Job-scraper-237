@@ -47,6 +47,7 @@ public class JobController {
     }
 
     // GET /jobs/:id
+    @PreAuthorize("hasrole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<JobOffer> getJobById(@PathVariable Long id) {
         return jobOfferService.findById(id)
@@ -56,7 +57,7 @@ public class JobController {
 
     // POST /jobs (pour admin)
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(path = "create", consumes = "application/json")
+    @PostMapping(path = "/create", consumes = "application/json")
     public ResponseEntity<?> createJob(@Valid @RequestBody JobDto jobDto) {
         jobOfferService.createJob(jobDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();

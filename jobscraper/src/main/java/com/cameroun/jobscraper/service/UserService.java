@@ -25,7 +25,7 @@ private final UserRepository userRepository;
         newUser.setProvider(AuthProvider.LOCAL);
         
         // temporairement, on attribue un rôle admin si l'email est
-        if ("admin@gmail.com".equals(registrationDto.userEmail())) { 
+        if ("admin@exemple.com".equals(registrationDto.userEmail())) { 
             newUser.setRole(Role.ROLE_ADMIN); 
         } else {
             newUser.setRole(Role.ROLE_USER);

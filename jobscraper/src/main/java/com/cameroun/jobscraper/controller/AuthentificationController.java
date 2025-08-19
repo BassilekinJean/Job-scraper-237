@@ -12,6 +12,9 @@ import com.cameroun.jobscraper.service.UserService;
 
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Authentification", description = "Gestion de l'authentification des utilisateurs")
 public class AuthentificationController {
 
     private final JWTutils jwtUtils;
@@ -52,7 +56,9 @@ public class AuthentificationController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> incriptionsUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
+    @Operation(summary = "Inscription d'un nouvel utilisateur", description = "Permet d'enregistrer un nouvel utilisateur")
+    @Schema(example = "{\"userEmail\": \"email@example.com\", \"userPassword\": \"myPassword123\", \"confirmPassword\": \"myPassword123\"}")
+    public ResponseEntity<?> inscriptionsUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
 
         try {
             // --- Appliquer le Rate Limiting for Registration ---
@@ -81,6 +87,8 @@ public class AuthentificationController {
     }
     
     @PostMapping("/login")
+    @Operation(summary = "Connexion d'un utilisateur", description = "Permet à un utilisateur de se connecter avec son email et mot de passe")
+    @Schema(example = "{\"username\": \"email@example.com\", \"password\": \"myPassword123\"}")
     public ResponseEntity<?> loginUser(@Valid @RequestBody UserLoginDto loginDto, HttpServletResponse response) { 
         String userEmail = loginDto.username(); 
         try {       
@@ -133,6 +141,7 @@ public class AuthentificationController {
     }    
 
     @PostMapping("/logout")
+    @Operation(summary = "Déconnexion d'un utilisateur", description = "Permet à un utilisateur de se déconnecter. Pas besoin de body")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         String authHeader = request.getHeader("Authorization");
         String accessToken = null;
@@ -173,6 +182,7 @@ public class AuthentificationController {
     }
 
     @PostMapping("/refresh")
+    @Operation(summary = "Rafraîchissement du jeton d'accès", description = "Permet de rafraîchir le jeton d'accès en utilisant le jeton de rafraîchissement. Pas besoin de body")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = null;
         Cookie[] cookies = request.getCookies();
@@ -210,6 +220,7 @@ public class AuthentificationController {
     }
 
     @GetMapping("/oauth2/success")
+    @Operation(summary = "Succès de l'authentification OAuth2", description = "Redirige l'utilisateur après une authentification réussie via OAuth2")
     public void oauth2Success(HttpServletResponse response, Authentication authentication) throws java.io.IOException {
         Utilisateur user = (Utilisateur) authentication.getPrincipal();
         String jwt = jwtUtils.generateToken(user.getUserEmail());

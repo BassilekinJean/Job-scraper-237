@@ -22,12 +22,15 @@ import com.cameroun.jobscraper.model.JobOffer;
 import com.cameroun.jobscraper.scrapper.JobInfoConcoursScraperService;
 import com.cameroun.jobscraper.service.JobOfferService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/jobs")
 @RequiredArgsConstructor
+@Tag(name = "Job", description = "Gestion des offres d'emploi")
 public class JobController {
 
     private final JobOfferService jobOfferService;
@@ -35,6 +38,8 @@ public class JobController {
 
     // GET /jobs?page=0&size=10&location=...
     @GetMapping
+    @Operation(summary = "Liste des offres d'emploi", description = "Permet de lister les offres d'emploi avec pagination et filtres")
+
     public PagedResponse<JobOffer> listJobs(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
@@ -49,6 +54,7 @@ public class JobController {
     // GET /jobs/:id
     @PreAuthorize("hasrole('ADMIN')")
     @GetMapping("/{id}")
+    @Operation(summary = "Récupération d'une offre d'emploi par ID", description = "Permet de récupérer une offre d'emploi en fonction de son ID")
     public ResponseEntity<JobOffer> getJobById(@PathVariable Long id) {
         return jobOfferService.findById(id)
                 .map(ResponseEntity::ok)
@@ -58,6 +64,7 @@ public class JobController {
     // POST /jobs (pour admin)
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(path = "/create", consumes = "application/json")
+    @Operation(summary = "Création d'une nouvelle offre d'emploi", description = "Permet de créer une nouvelle offre d'emploi")
     public ResponseEntity<?> createJob(@Valid @RequestBody JobDto jobDto) {
         jobOfferService.createJob(jobDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -65,6 +72,7 @@ public class JobController {
 
     // POST /jobs/scrape (pour admin)
     @PostMapping("/scrape")
+    @Operation(summary = "Lancement du scraping des offres d'emploi", description = "Permet de lancer le scraping des offres d'emploi")
     public ResponseEntity<?> scrapeJobs() {
         try {
             jobInfoConcoursScraperService.scrapeJobs();

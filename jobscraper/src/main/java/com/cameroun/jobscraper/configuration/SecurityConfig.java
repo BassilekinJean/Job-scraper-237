@@ -41,11 +41,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/**", "/h2-console/**", "/actuator/**", 
                                    "/swagger-ui/**", "/swagger-ui.html", 
-                                   "/v3/api-docs/**").permitAll()
+                                   "/v3/api-docs/**", "/jobs/scrape").permitAll()
                     .anyRequest().authenticated()
                 )
                 .oauth2Login(Customizer.withDefaults())
-                .formLogin(form -> form.disable()) // Désactiver le form login pour l'API
+                .formLogin(Customizer.withDefaults()) 
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())) // Pour H2 console
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

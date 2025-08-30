@@ -44,35 +44,31 @@ public class EmploiCmScrapper {
 
             while (clicksCounter < MAX_CLICKS) { 
                 String renderedHtml = webDriver.getPageSource();
-                Document listPage = Jsoup.parse(renderedHtml);
+                Document listPage = Jsoup.parse(renderedHtml, "https://www.emploi.cm");
 
-                Elements jobLinks = listPage.select(".card-job-detail > h3 > a");
+                Elements jobLinks = listPage.select(".card-job-detail > h3").select("a");
                 for (Element link : jobLinks) {
                     String jobUrl = link.attr("abs:href"); 
                     scrapeJobDetails(jobUrl);
                     logger.info("Scraping : {}", jobUrl);
                 }
 
-                WebElement nextButton = webDriver.findElement(By.cssSelector(".pager-next.active.pagination-next"));
+                WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+                WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".pager-next.active.pagination-next a")));
 
                 if (nextButton == null || !nextButton.isDisplayed()) {
                     logger.info("Fin de la pagination, plus de bouton 'suivant' trouvé.");
                     break; 
                 }
 
-                // Get a stable element before clicking
-                WebElement stableElement = webDriver.findElement(By.cssSelector(".page-search-jobs-wrapper"));
+                // Scroller vers le bouton
+                ((org.openqa.selenium.JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", nextButton);
 
                 nextButton.click();
-
-                // Wait until the stable element becomes stale (page reloads)
-                new WebDriverWait(webDriver, Duration.ofSeconds(5)).until(
-                    ExpectedConditions.stalenessOf(stableElement)
-                );
-
+                
                 clicksCounter++;
             }
-                logger.info("Pagination terminée après {} clics.", clicksCounter);
+            logger.info("Pagination terminée après {} clics.", clicksCounter);
 
             } catch (TimeoutException e) {
                 logger.warn("La page suivante n'a pas chargé dans les délais impartis. Fin de la pagination.", e);

@@ -30,7 +30,7 @@ public class EmploiCmScrapper {
     private final WebDriver webDriver; 
 
     public void scrapeJobs() {
-        final int MAX_PAGES = 2; 
+        final int MAX_PAGES = 7; 
 
         try {
             for (int page = 1; page <= MAX_PAGES; page++) {

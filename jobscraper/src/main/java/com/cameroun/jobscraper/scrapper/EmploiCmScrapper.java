@@ -1,18 +1,13 @@
 package com.cameroun.jobscraper.scrapper;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,40 +30,25 @@ public class EmploiCmScrapper {
     private final WebDriver webDriver; 
 
     public void scrapeJobs() {
-        String listUrl = "https://www.emploi.cm/recherche-jobs-cameroun";
-        int clicksCounter = 0; 
-        final int MAX_CLICKS = 5; 
+        final int MAX_PAGES = 2; 
 
-        try  {
-            webDriver.get(listUrl);
+        try {
+            for (int page = 1; page <= MAX_PAGES; page++) {
+                String pageUrl = "https://www.emploi.cm/recherche-jobs-cameroun?page=" + page;
+                webDriver.get(pageUrl);
 
-            while (clicksCounter < MAX_CLICKS) { 
                 String renderedHtml = webDriver.getPageSource();
                 Document listPage = Jsoup.parse(renderedHtml, "https://www.emploi.cm");
 
                 Elements jobLinks = listPage.select(".card-job-detail > h3").select("a");
                 for (Element link : jobLinks) {
-                    String jobUrl = link.attr("abs:href"); 
+                    String jobUrl = link.attr("abs:href");
                     scrapeJobDetails(jobUrl);
                     logger.info("Scraping : {}", jobUrl);
                 }
-
-                WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
-                WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".pager-next.active.pagination-next a")));
-
-                if (nextButton == null || !nextButton.isDisplayed()) {
-                    logger.info("Fin de la pagination, plus de bouton 'suivant' trouvé.");
-                    break; 
-                }
-
-                // Scroller vers le bouton
-                ((org.openqa.selenium.JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", nextButton);
-
-                nextButton.click();
-                
-                clicksCounter++;
             }
-            logger.info("Pagination terminée après {} clics.", clicksCounter);
+
+            logger.info("Pagination terminée après {} pages.", MAX_PAGES);
 
             } catch (TimeoutException e) {
                 logger.warn("La page suivante n'a pas chargé dans les délais impartis. Fin de la pagination.", e);
@@ -78,7 +58,7 @@ public class EmploiCmScrapper {
                 if (webDriver != null) {
                     webDriver.quit();
                 }
-            }
+        }
     }
     
 

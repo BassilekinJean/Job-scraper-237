@@ -4,11 +4,11 @@ services:
   postgres:
     image: postgres:16.9
     shm_size: 128mb
-    container_name: gestioPro_db
+    container_name: jobscraper_db
     environment:
-      POSTGRES_USER: admin_gestio
+      POSTGRES_USER: admin_jobscraper
       POSTGRES_PASSWORD: ldmamadpdk&&1212KS2DS113D31D
-      POSTGRES_DB: gestio_pro
+      POSTGRES_DB: jobscraper_db
 
     ports:
       - "5433:5432"
@@ -18,7 +18,7 @@ services:
   # Conteneur Redis
   redis:
     image: redis:7.4.5
-    container_name: gestioPro_redis
+    container_name: jobscrapper_redis
     ports:
       - "6380:6379"
     volumes:
@@ -32,17 +32,17 @@ services:
 
   # Conteneur Spring Boot
   app:
-    image: gestio_pro_apk
+    image: job_scraper
     build: .  
     ports:
       - "8081:8080"
     depends_on:
       - postgres 
       - redis 
-    container_name: app_bassilekin_21T2352
+    container_name: app_jobscraper
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hospital_inf222
-      SPRING_DATASOURCE_USERNAME: admin_gestio
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jobscraper_db
+      SPRING_DATASOURCE_USERNAME: admin_jobscraper
       SPRING_DATASOURCE_PASSWORD: ldmamadpdk&&1212KS2DS113D31D
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: 'true'  # Ajouté pour afficher les requêtes SQL

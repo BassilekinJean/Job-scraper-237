@@ -22,9 +22,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class JobInfoConcoursScraperService {
+public class JobInfoConcoursScraper {
 
-    private static final Logger logger = LoggerFactory.getLogger(JobInfoConcoursScraperService.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobInfoConcoursScraper.class);
 
     private final JobRepository jobOfferRepository;
 

@@ -25,6 +25,6 @@ USER appuser
 
 EXPOSE 8080
 
-LABEL maintainer="Bassilekin jean 21T2352"
+LABEL maintainer="Bassilekin jean simonet"
 
-ENTRYPOINT ["java", "-jar", "gestio-pro.jar"]
+ENTRYPOINT ["java", "-jar", "jobscraper.jar"]

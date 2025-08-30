@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cameroun.jobscraper.Dto.JobDto;
 import com.cameroun.jobscraper.Dto.PagedResponse;
 import com.cameroun.jobscraper.model.JobOffer;
-import com.cameroun.jobscraper.scrapper.JobInfoConcoursScraperService;
+import com.cameroun.jobscraper.scrapper.EmploiCmScrapper;
+import com.cameroun.jobscraper.scrapper.JobInfoConcoursScraper;
 import com.cameroun.jobscraper.service.JobOfferService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,12 +36,12 @@ import lombok.RequiredArgsConstructor;
 public class JobController {
 
     private final JobOfferService jobOfferService;
-    private final JobInfoConcoursScraperService jobInfoConcoursScraperService;
+    private final JobInfoConcoursScraper jobInfoConcoursScraperService;
+    private final EmploiCmScrapper emploiCmScrapper;
 
     // GET /jobs?page=0&size=10&location=...
     @GetMapping
     @Operation(summary = "Liste des offres d'emploi", description = "Permet de lister les offres d'emploi avec pagination et filtres")
-
     public PagedResponse<JobOffer> listJobs(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
@@ -77,8 +78,10 @@ public class JobController {
     @Operation(summary = "Lancement du scraping des offres d'emploi", description = "Permet de lancer le scraping des offres d'emploi")
     public ResponseEntity<?> scrapeJobs() {
         try {
-            jobInfoConcoursScraperService.scrapeJobs();
-            
+            //jobInfoConcoursScraperService.scrapeJobs();
+
+            emploiCmScrapper.scrapeJobs();
+
             Map<String, String> response = new HashMap<>();
             response.put("message", "Scraping terminé avec succès");
             response.put("timestamp", LocalDateTime.now().toString());

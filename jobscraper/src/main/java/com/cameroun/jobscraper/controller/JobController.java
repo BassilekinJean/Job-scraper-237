@@ -78,7 +78,7 @@ public class JobController {
     @Operation(summary = "Lancement du scraping des offres d'emploi", description = "Permet de lancer le scraping des offres d'emploi")
     public ResponseEntity<?> scrapeJobs() {
         try {
-            //jobInfoConcoursScraperService.scrapeJobs();
+            jobInfoConcoursScraperService.scrapeJobs();
 
             emploiCmScrapper.scrapeJobs();
 
